@@ -2,16 +2,35 @@ const UserModel = require("../models/User");
 
 exports.register = async (req, res) => {
   try {
-    const { userName, password, email } = req.body || {};
+    const { userName, password, email } = req.body;
 
-    if (!userName || !password || !email)
-      return res.status(400).send("Inputs are required!");
+    await UserModel.validateAuth(req.body);
 
-    await UserModel.create(req.body);
+    const user = await UserModel.findOne({ email });
 
-    res.status(200).send("user registered successfuly!");
-   
+    if (user) throw new Error("user is already exist.");
+
+    const newUser = new UserModel({
+      userName,
+      password,
+      email,
+    });
+
+    newUser
+      .save()
+      .then(() => res.status(200).send("user registered successfuly."))
+      .catch((err) => {
+        if (err) throw err;
+      });
   } catch (error) {
-    res.status(500).send(error.message);
+    const errors = [];
+
+    if (error.inner) {
+      error.inner.forEach((error) => {
+        errors.push(error.message);
+      });
+    } else errors.push(error.message);
+
+    res.status(500).send({ errors });
   }
 };
