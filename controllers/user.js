@@ -19,8 +19,12 @@ exports.getUser = async (req, res) => {
 };
 
 exports.getAllUser = async (req, res) => {
-  const users = await UserModel.find();
+  const users = await UserModel.find().lean();
   if (!users || !users.length) return res.send("there is no registered user!");
 
-  res.send(users);
+  users.forEach(user => {
+    Reflect.deleteProperty(user, 'password')
+  });
+
+  res.send(users)
 };

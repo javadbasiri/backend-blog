@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const yup = require("yup");
 
 const UserSchema = new mongoose.Schema({
-  userName: {
+  fullName: {
     type: String,
     required: true,
     trim: true,
@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 const schema = yup.object({
-  userName: yup.string().required(),
+  fullName: yup.string().required(),
   password: yup.string().required().min(4).max(6),
   email: yup.string().email().required(),
 });
