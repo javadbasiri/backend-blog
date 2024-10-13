@@ -14,6 +14,5 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
 app.use("/auth", authRoutes);
 app.use("/user", isAuthenticated, userRoutes);
-app.use("/", (req, res) => res.send("home"));
 
 module.exports = app;
