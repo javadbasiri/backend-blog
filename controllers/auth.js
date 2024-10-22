@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
     if (!isPasswordValid) throw new Error("password is not correct.");
   
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: 6 * 60,
+      expiresIn: '1h',
     });
 
     Reflect.deleteProperty(user, "password");
